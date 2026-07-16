@@ -25,3 +25,20 @@ replay_pid*
 
 # Kotlin Gradle plugin data, see https://kotlinlang.org/docs/whatsnew20.html#new-directory-for-kotlin-data-in-gradle-projects
 .kotlin/
+
+# Gradle build output and cache
+build/
+.gradle/
+bin/
+
+# Gradle wrapper (keep gradle/wrapper/gradle-wrapper.properties)
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# JVM heap dumps
+*.hprof
+
+# IDE files
+.vscode/
+.idea/
+*.iml
