@@ -24,8 +24,6 @@ enum class Status {
     }
 }
 
-// ─── Data Class ──────────────────────────────────────────────────────────────
-
 // Represents a single task. val fields are set once at creation; var fields can be updated.
 data class Task(
     val id: Int,               // immutable – set once at creation
