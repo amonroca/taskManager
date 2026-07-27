@@ -1,12 +1,11 @@
 package taskmanager
 
-// ─── Enums ───────────────────────────────────────────────────────────────────
+// Enums
 
-// Demonstrates: 'when' as an expression on an enum type
 enum class Priority {
     LOW, MEDIUM, HIGH;
 
-    /** Returns a display-friendly label using a 'when' expression. */
+    // Returns a display-friendly label for each priority level
     fun label(): String = when (this) {
         LOW    -> "[ Low    ]"
         MEDIUM -> "[ Medium ]"
@@ -14,11 +13,10 @@ enum class Priority {
     }
 }
 
-// Demonstrates: another 'when' expression returning different string branches
 enum class Status {
     PENDING, IN_PROGRESS, COMPLETED;
 
-    /** Returns a display-friendly label using a 'when' expression. */
+    // Returns a display-friendly label for each status
     fun label(): String = when (this) {
         PENDING     -> "[ Pending     ]"
         IN_PROGRESS -> "[ In Progress ]"
@@ -28,12 +26,7 @@ enum class Status {
 
 // ─── Data Class ──────────────────────────────────────────────────────────────
 
-/**
- * Represents a single task in the task manager.
- *
- * Demonstrates: data class (auto-generates equals, hashCode, toString, copy).
- * Also demonstrates: immutable (val) vs mutable (var) properties.
- */
+// Represents a single task. val fields are set once at creation; var fields can be updated.
 data class Task(
     val id: Int,               // immutable – set once at creation
     var title: String,         // mutable – can be updated by the user
@@ -41,7 +34,7 @@ data class Task(
     var priority: Priority,    // mutable
     var status: Status         // mutable
 ) {
-    /** Builds a formatted multi-line display string (string-template expression). */
+    // Returns a formatted multi-line string with all task details
     fun display(): String =
         "  ID          : $id\n" +
         "  Title       : $title\n" +

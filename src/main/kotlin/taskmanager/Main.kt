@@ -1,16 +1,7 @@
 package taskmanager
 
-// ─── Entry Point ─────────────────────────────────────────────────────────────
-
-/**
- * Main entry point for the Task Manager CLI application.
- *
- * Demonstrates: variables (val/var), expressions, conditionals,
- *               loops, functions, classes, data classes,
- *               collections, and the 'when' keyword.
- */
+// Entry point – initializes the manager, loads sample tasks, and runs the menu loop
 fun main() {
-    // Immutable variables (val)
     val appTitle  = "KOTLIN TASK MANAGER"
     val separator = "=".repeat(45)
 
@@ -22,15 +13,13 @@ fun main() {
     seedTasks(manager)
     println("  Loaded ${manager.taskCount} sample tasks.\n")
 
-    // Mutable variable (var) – controls the main loop
+    // Controls whether the menu loop keeps running
     var running = true
 
-    // Demonstrates: while loop
     while (running) {
         printMainMenu()
         val input = readLine()?.trim() ?: ""
 
-        // Demonstrates: 'when' as a statement dispatching on the user's menu choice
         when (input) {
             "1" -> listAllTasks(manager)
             "2" -> addNewTask(manager)
@@ -40,19 +29,14 @@ fun main() {
             "6" -> showStatistics(manager)
             "0" -> {
                 println("\n  Goodbye!")
-                running = false            // mutable var modified inside the loop
+                running = false
             }
             else -> println("  Invalid option. Please try again.")
         }
     }
 }
 
-// ─── Seed Data ────────────────────────────────────────────────────────────────
-
-/**
- * Populates the manager with sample tasks.
- * Demonstrates: calling a function that modifies a collection repeatedly.
- */
+// Populates the manager with a set of sample tasks at startup
 fun seedTasks(manager: TaskManager) {
     manager.addTask("Buy groceries",         "Milk, eggs, bread, and coffee",          Priority.LOW)
     manager.addTask("Complete Kotlin module", "Finish the CSE 310 task manager project", Priority.HIGH)
@@ -61,7 +45,7 @@ fun seedTasks(manager: TaskManager) {
     manager.addTask("Read Clean Code",       "Resume reading from chapter 5",           Priority.LOW)
 }
 
-// ─── Menu ─────────────────────────────────────────────────────────────────────
+// Menu
 
 fun printMainMenu() {
     println()
@@ -77,42 +61,29 @@ fun printMainMenu() {
     print("  Enter choice: ")
 }
 
-// ─── List Tasks ──────────────────────────────────────────────────────────────
-
-/**
- * Prints every task.
- * Demonstrates: for loop over a list.
- */
+// Prints all tasks, or a message when the list is empty
 fun listAllTasks(manager: TaskManager) {
     val tasks = manager.getAllTasks()
     println("\n  ─── All Tasks (${tasks.size}) ───")
 
-    // Demonstrates: conditional – check for empty list
     if (tasks.isEmpty()) {
         println("  No tasks found.")
         return
     }
 
-    // Demonstrates: for loop iterating over a collection
     for (task in tasks) {
         println()
         println(task.display())
     }
 }
 
-// ─── Add Task ─────────────────────────────────────────────────────────────────
-
-/**
- * Prompts the user for new task details and adds it.
- * Demonstrates: conditionals guarding invalid input, string-template expressions.
- */
+// Prompts for task details and adds a new task to the manager
 fun addNewTask(manager: TaskManager) {
     println("\n  ─── Add New Task ───")
 
     print("  Title: ")
     val title = readLine()?.trim() ?: ""
 
-    // Conditional check
     if (title.isBlank()) {
         println("  Title cannot be empty.")
         return
@@ -124,16 +95,10 @@ fun addNewTask(manager: TaskManager) {
     val priority = promptPriority() ?: return
 
     val task = manager.addTask(title, description, priority)
-    // String-template expression
     println("  Task #${task.id} '${task.title}' added successfully.")
 }
 
-// ─── Update Task ──────────────────────────────────────────────────────────────
-
-/**
- * Lets the user choose which field of a task to update.
- * Demonstrates: nested 'when' expressions.
- */
+// Lets the user select a task and change its title, status, or priority
 fun updateTask(manager: TaskManager) {
     println("\n  ─── Update Task ───")
     listAllTasks(manager)
@@ -141,7 +106,6 @@ fun updateTask(manager: TaskManager) {
     print("\n  Enter task ID to update: ")
     val id = readLine()?.trim()?.toIntOrNull()
 
-    // Conditional – validate the ID
     if (id == null) { println("  Invalid ID."); return }
 
     val task = manager.getTaskById(id)
@@ -152,7 +116,6 @@ fun updateTask(manager: TaskManager) {
     println("  What to update?  1. Title   2. Status   3. Priority")
     print("  Select (1-3): ")
 
-    // Demonstrates: 'when' dispatching on sub-menu choice
     when (readLine()?.trim()) {
         "1" -> {
             print("  New title: ")
@@ -178,12 +141,7 @@ fun updateTask(manager: TaskManager) {
     }
 }
 
-// ─── Delete Task ──────────────────────────────────────────────────────────────
-
-/**
- * Removes a task by ID.
- * Demonstrates: conditional branching on a boolean return value.
- */
+// Asks for a task ID and removes it from the manager
 fun deleteTask(manager: TaskManager) {
     println("\n  ─── Delete Task ───")
     listAllTasks(manager)
@@ -193,7 +151,6 @@ fun deleteTask(manager: TaskManager) {
 
     if (id == null) { println("  Invalid ID."); return }
 
-    // Conditional – check result of deleteTask()
     if (manager.deleteTask(id)) {
         println("  Task #$id deleted.")
     } else {
@@ -201,12 +158,7 @@ fun deleteTask(manager: TaskManager) {
     }
 }
 
-// ─── Filter / Sort ────────────────────────────────────────────────────────────
-
-/**
- * Filters or sorts the task list.
- * Demonstrates: 'when' with multiple branches and forEach loop.
- */
+// Filters tasks by status or priority, or sorts them by priority
 fun filterTasks(manager: TaskManager) {
     println("\n  ─── Filter / Sort Tasks ───")
     println("  1. Filter by Status")
@@ -214,7 +166,6 @@ fun filterTasks(manager: TaskManager) {
     println("  3. Sort by Priority (High → Low)")
     print("  Select (1-3): ")
 
-    // Demonstrates: 'when' expression choosing a branch based on user input
     when (readLine()?.trim()) {
         "1" -> {
             val status   = promptStatus() ?: return
@@ -239,28 +190,14 @@ fun filterTasks(manager: TaskManager) {
     }
 }
 
-// ─── Statistics ───────────────────────────────────────────────────────────────
-
-/**
- * Displays a summary of task counts and a progress bar.
- *
- * Demonstrates:
- *  - 'when' with exact integer matches
- *  - 'when' with integer ranges (in 1..25, in 26..50, …)
- *  - 'when' without an argument (acting as an if-else chain)
- *  - for loop over a Map
- *  - if as an expression (ternary-style)
- */
+// Shows task counts per status, a progress bar, and a motivational message
 fun showStatistics(manager: TaskManager) {
     println("\n  ─── Task Statistics ───\n")
 
-    // Immutable local val
     val total = manager.taskCount
     val stats = manager.getStatistics()
 
-    // Demonstrates: for loop over a Map's entries
     for ((statusName, count) in stats) {
-        // Demonstrates: if as an expression (avoids division by zero)
         val pct    = if (total > 0) count * 100 / total else 0
         val filled = pct / 5
         val bar    = "█".repeat(filled) + "░".repeat(20 - filled)
@@ -270,10 +207,8 @@ fun showStatistics(manager: TaskManager) {
     println()
 
     val completedCount = stats["COMPLETED"] ?: 0
-    // Expression: if used inline to compute completion rate
     val completionRate = if (total > 0) completedCount * 100 / total else 0
 
-    // Demonstrates: 'when' with exact-value and range branches
     val message = when (completionRate) {
         0         -> "No tasks completed yet — time to get started!"
         in 1..25  -> "Just getting started. Keep the momentum going!"
@@ -289,7 +224,6 @@ fun showStatistics(manager: TaskManager) {
 
     println()
 
-    // Demonstrates: 'when' without an argument (used as a compact if-else chain)
     val urgency = when {
         stats["HIGH"] ?: 0 > 0  && stats["PENDING"] ?: 0 > 0  -> "You have HIGH priority tasks pending — act now!"
         stats["MEDIUM"] ?: 0 > 0                               -> "Some MEDIUM priority tasks still need attention."
@@ -298,13 +232,7 @@ fun showStatistics(manager: TaskManager) {
     println("  Urgency note    : $urgency")
 }
 
-// ─── Input Helpers ────────────────────────────────────────────────────────────
-
-/**
- * Prompts the user to pick a Priority.
- * Returns null on invalid input.
- * Demonstrates: 'when' as an expression returning a nullable type.
- */
+// Asks the user to pick a Priority; returns null if input is invalid
 fun promptPriority(): Priority? {
     println("  Priority:  1. Low   2. Medium   3. High")
     print("  Select (1-3): ")
@@ -316,11 +244,7 @@ fun promptPriority(): Priority? {
     }
 }
 
-/**
- * Prompts the user to pick a Status.
- * Returns null on invalid input.
- * Demonstrates: 'when' as an expression returning a nullable type.
- */
+// Asks the user to pick a Status; returns null if input is invalid
 fun promptStatus(): Status? {
     println("  Status:  1. Pending   2. In Progress   3. Completed")
     print("  Select (1-3): ")
